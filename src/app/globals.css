@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@font-face {
+  font-family: 'IRANSansWeb';
+  src: url('../../public/fonts/IRANSansWeb\(FaNum\).ttf')
+  format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-IRANSansWeb: 'IRANSansWeb';
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* globals.css یا فایل CSS مربوطه */
+@keyframes rotate-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotate-medium {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(720deg); }
+}
+
+@keyframes rotate-fast {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(1080deg); }
+}
+
+@keyframes rotate-slow-reverse {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+.animate-rotate-slow {
+  animation: rotate-slow 8s linear infinite;
+}
+
+.animate-rotate-medium {
+  animation: rotate-medium 6s linear infinite;
+}
+
+.animate-rotate-fast {
+  animation: rotate-fast 4s linear infinite;
+}
+
+.animate-rotate-slow-reverse {
+  animation: rotate-slow-reverse 10s linear infinite;
+
+
+
+}
+
+
+
+/* globals.css */
+@keyframes rotate-slow {
+  0% { transform: rotate(0deg) translateX(0) translateY(0); }
+  25% { transform: rotate(90deg) translateX(20px) translateY(-15px); }
+  50% { transform: rotate(180deg) translateX(0) translateY(0); }
+  75% { transform: rotate(270deg) translateX(-20px) translateY(15px); }
+  100% { transform: rotate(360deg) translateX(0) translateY(0); }
+}
+
+@keyframes rotate-medium {
+  0% { transform: rotate(0deg) translateX(0) translateY(0); }
+  33% { transform: rotate(120deg) translateX(30px) translateY(-20px); }
+  66% { transform: rotate(240deg) translateX(-30px) translateY(20px); }
+  100% { transform: rotate(360deg) translateX(0) translateY(0); }
+}
+
+@keyframes rotate-fast {
+  0% { transform: rotate(0deg) translateX(0) translateY(0) scale(1); }
+  50% { transform: rotate(180deg) translateX(40px) translateY(-25px) scale(1.1); }
+  100% { transform: rotate(360deg) translateX(0) translateY(0) scale(1); }
+}
+
+@keyframes rotate-slow-reverse {
+  0% { transform: rotate(0deg) translateX(0) translateY(0); }
+  25% { transform: rotate(-90deg) translateX(-20px) translateY(15px); }
+  50% { transform: rotate(-180deg) translateX(0) translateY(0); }
+  75% { transform: rotate(-270deg) translateX(20px) translateY(-15px); }
+  100% { transform: rotate(-360deg) translateX(0) translateY(0); }
+}
+
+@keyframes rotate-medium-reverse {
+  0% { transform: rotate(0deg) translateX(0) translateY(0) scale(1); }
+  50% { transform: rotate(-180deg) translateX(-35px) translateY(25px) scale(1.05); }
+  100% { transform: rotate(-360deg) translateX(0) translateY(0) scale(1); }
+}
+
+.animate-rotate-slow {
+  animation: rotate-slow 15s ease-in-out infinite;
+}
+
+.animate-rotate-medium {
+  animation: rotate-medium 12s ease-in-out infinite;
+}
+
+.animate-rotate-fast {
+  animation: rotate-fast 8s ease-in-out infinite;
+}
+
+.animate-rotate-slow-reverse {
+  animation: rotate-slow-reverse 18s ease-in-out infinite;
+}
+
+.animate-rotate-medium-reverse {
+  animation: rotate-medium-reverse 10s ease-in-out infinite;
+}
+
+/* globals.css */
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* انیمیشن‌های اضافی برای افکت بهتر */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+
+
+/* globals.css */
+@keyframes rotate-square {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    }
+}
+
+
+
+@keyframes rotate-square-reverse {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.animate-pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* برای المان‌های Material-UI */
+.MuiCard-root {
+  animation-duration: 8s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+
+}
+
+
+
+
+  
