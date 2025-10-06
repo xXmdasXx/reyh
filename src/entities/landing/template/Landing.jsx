@@ -5,9 +5,11 @@ import Features from '../organism/Features'
 import Plans from '../organism/Plans'
 
 
+
 function landing() {
   return (
     <div className='flex flex-col justify-center'>
+             
         <Hero></Hero>
         <About></About>
         <Features></Features>

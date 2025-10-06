@@ -14,12 +14,14 @@ function About() {
       transition={{ duration: 0.8, ease: "easeOut" }} 
       viewport={{ once: true }}             
     >
-      <div className=' w-[45%] flex flex-col justify-center items-start px-5'>
+      <div className='w-[35%] flex flex-col justify-center items-start px-5 
+      2xl:w-[40%]'>
         <AboutTypographyMolecule />
       </div>
       
-      <div className='w-[55%] grid grid-cols-2 gap-4 pt-20 pl-5'>
-        <div className='flex justify-center items-center relative h-[18rem] right-1 '>
+      <div className='w-[65%] grid grid-cols-2 gap-4 pt-20 pl-5 
+      2xl:w-[60%]'>
+        <div className='flex justify-center items-center relative h-[18rem] right-3'>
           <TestimonialCard />
         </div>
         
@@ -27,7 +29,7 @@ function About() {
           <TestimonialCard />
         </div>
 
-        <div className='flex justify-center items-center relative h-[18rem] bottom-20 right-1 '>
+        <div className='flex justify-center items-center relative h-[18rem] bottom-20 right-3'>
           <TestimonialCard />
         </div>
         

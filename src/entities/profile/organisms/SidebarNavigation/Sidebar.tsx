@@ -61,7 +61,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate }) => {
     <div
       className="h-full w-[271px] flex flex-col py-12 border-l border-blue-600/30 text-right pr-4 pl-2"
       style={{
-        background: "linear-gradient (to bottom, #4D88FF 0%, #A32EDA 2.37%, #B020D5 5% , #B020D5 100%)",
+        background: "linear-gradient (to bottom, #4d88ff5e 0%, #a42eda5d 2.37%, #b120d56b 5% , #b120d56b 100%  )",
       }}
     >
       {/* لوگو و عنوان */}
@@ -125,15 +125,15 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate }) => {
           }
         }}
       >
-        <DialogTitle sx={{ textAlign: 'right', fontFamily: 'IRANSansWeb' }}>
+        <DialogTitle sx={{ textAlign: '', fontFamily: 'IRANSansWeb' }}>
           خروج از حساب کاربری
         </DialogTitle>
-        <DialogContent sx={{ textAlign: 'right', fontFamily: 'IRANSansWeb' }}>
+        <DialogContent sx={{  fontFamily: 'IRANSansWeb' }}>
           <Typography variant="body1" sx={{ color: '#e4e4e4' }}>
             آیا مطمئن هستید که می‌خواهید از حساب کاربری خود خارج شوید؟
           </Typography>
         </DialogContent>
-        <DialogActions sx={{ padding: '16px 24px', gap: 2 }}>
+        <DialogActions sx={{ textAlign: 'right', padding: '16px 24px', gap: 2 }}>
           <Button
             onClick={handleCloseLogoutDialog}
             sx={{
@@ -168,3 +168,5 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate }) => {
 };
 
 export default Sidebar;
+
+

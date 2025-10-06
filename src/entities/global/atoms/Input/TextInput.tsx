@@ -5,7 +5,6 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import AlternateEmailOutlinedIcon from '@mui/icons-material/AlternateEmailOutlined';
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
-import { Password } from "@mui/icons-material";
 
 type UserPassFieldProps = TextFieldProps & {
   label: string;
@@ -62,15 +61,12 @@ const UserPassField: React.FC<UserPassFieldProps> = ({
       break;
     case "lock":
       iconComponent = <RemoveRedEyeOutlinedIcon fontSize="small" sx={{ color: color }} />;
-
       hasPasswordToggle = true;
       break;
     default:
       iconComponent = null;
   }
 
-
-  // اگر type اصلی password باشد و آیکون lock داشته باشیم
   const inputType = type === "password" && hasPasswordToggle ? 
     (showPassword ? "text" : "password") : type;
 
@@ -94,6 +90,9 @@ const UserPassField: React.FC<UserPassFieldProps> = ({
           color: '#E4E4E4',
           '&.Mui-focused': {
             color: '#E4E4E4'
+          },
+          '&.Mui-error': {
+            color: '#E4E4E4'
           }
         }
       }}
@@ -115,11 +114,16 @@ const UserPassField: React.FC<UserPassFieldProps> = ({
           },
           "&:hover fieldset": {
             borderColor: "#E4E4E4",
-
           },
           "&.Mui-focused fieldset": {
             borderColor: "secondary.main",
             borderWidth: 2,
+          },
+          "&.Mui-error fieldset": {
+            borderColor: "#d32f2f",
+          },
+          "&.Mui-error:hover fieldset": {
+            borderColor: "#d32f2f",
           }
         },
         input: {
@@ -130,6 +134,11 @@ const UserPassField: React.FC<UserPassFieldProps> = ({
             caretColor: "#ffffff",
             borderRadius: 0
           },
+        },
+        "& .MuiFormHelperText-root": {
+          color: "#d32f2f",
+          fontSize: "0.75rem",
+          marginTop: "4px"
         },
         ...sx,
       }}

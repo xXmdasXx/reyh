@@ -1,8 +1,9 @@
 import React from 'react'
 import Landing from '../../entities/landing/template/Landing'
 
-
-
+export const metadata = {
+  title: "اکورا",
+};
 
 function page() {
   return (

@@ -1,16 +1,15 @@
 // src/entities/profile/molecules/ProfileEditForm/ProfileEditForm.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Typography from "../../../global/atoms/Typography/TypographyAtom";
 import TextInput from "../../../global/atoms/Input/TextInput";
 import PrimaryButton from "../../../global/atoms/Button/PrimaryButton";
 
 interface ProfileEditFormProps {
   userInfo: {
-    name: string;
+    fullname: string;
     email: string;
-    phone: string;
-    password: string;
-    username?: string;
+    phonenumber: string;
+    username: string;
   };
   onUpdateInfo: (newInfo: any) => void;
   loading?: boolean;
@@ -22,10 +21,10 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
   loading = false 
 }) => {
   const [formData, setFormData] = useState({
-    name: userInfo.name,
-    email: userInfo.email,
-    phone: userInfo.phone,
-    username: userInfo.username || "",
+    fullname: "",
+    email: "",
+    phonenumber: "",
+    username: "",
     bio: "",
     currentPassword: "",
     newPassword: "",
@@ -33,14 +32,25 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
   });
 
   const [errors, setErrors] = useState({
-    name: "",
+    fullname: "",
     email: "",
-    phone: "",
+    phonenumber: "",
     username: "",
     currentPassword: "",
     newPassword: "",
     confirmPassword: ""
   });
+
+  // پر کردن فیلدها با اطلاعات واقعی کاربر
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      fullname: userInfo.fullname || "",
+      email: userInfo.email || "",
+      phonenumber: userInfo.phonenumber || "",
+      username: userInfo.username || ""
+    }));
+  }, [userInfo]);
 
   const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
@@ -48,19 +58,16 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
       [field]: event.target.value
     }));
 
-    // پاک کردن خطا هنگام تایپ
     if (errors[field as keyof typeof errors]) {
       setErrors(prev => ({ ...prev, [field]: "" }));
     }
   };
 
-  // تابع اعتبارسنجی ایمیل
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  // تابع اعتبارسنجی شماره تلفن
   const isValidPhone = (phone: string) => {
     const phoneRegex = /^09\d{9}$/;
     return phoneRegex.test(phone);
@@ -68,9 +75,9 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
 
   const validateForm = () => {
     const newErrors = {
-      name: "",
+      fullname: "",
       email: "",
-      phone: "",
+      phonenumber: "",
       username: "",
       currentPassword: "",
       newPassword: "",
@@ -78,25 +85,21 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
     };
     let hasError = false;
 
-    // بررسی نام
-    if (formData.name.trim() && formData.name.trim().length < 3) {
-      newErrors.name = "نام باید حداقل ۳ کاراکتر باشد";
+    if (formData.fullname.trim() && formData.fullname.trim().length < 3) {
+      newErrors.fullname = "نام باید حداقل ۳ کاراکتر باشد";
       hasError = true;
     }
 
-    // بررسی ایمیل
     if (formData.email.trim() && !isValidEmail(formData.email.trim())) {
       newErrors.email = "فرمت ایمیل صحیح نیست";
       hasError = true;
     }
 
-    // بررسی شماره تلفن
-    if (formData.phone.trim() && !isValidPhone(formData.phone.trim())) {
-      newErrors.phone = "شماره تلفن باید با 09 شروع شود و 11 رقم باشد";
+    if (formData.phonenumber.trim() && !isValidPhone(formData.phonenumber.trim())) {
+      newErrors.phonenumber = "شماره تلفن باید با 09 شروع شود و 11 رقم باشد";
       hasError = true;
     }
 
-    // بررسی رمز عبور جدید
     if (formData.newPassword) {
       if (!formData.currentPassword) {
         newErrors.currentPassword = "رمز عبور فعلی الزامی است";
@@ -119,24 +122,22 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
   };
 
   const handleSubmit = () => {
-    // اعتبارسنجی فرم
     if (!validateForm()) {
       return;
     }
 
-    // آماده‌سازی داده‌ها برای ارسال
     const updateData: any = {};
 
-    if (formData.name.trim() !== userInfo.name) {
-      updateData.name = formData.name.trim();
+    if (formData.fullname.trim() !== userInfo.fullname) {
+      updateData.fullname = formData.fullname.trim();
     }
 
     if (formData.email.trim() !== userInfo.email) {
       updateData.email = formData.email.trim();
     }
 
-    if (formData.phone.trim() !== userInfo.phone) {
-      updateData.phone = formData.phone.trim();
+    if (formData.phonenumber.trim() !== userInfo.phonenumber) {
+      updateData.phonenumber = formData.phonenumber.trim();
     }
 
     if (formData.username.trim() !== userInfo.username) {
@@ -147,69 +148,71 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
       updateData.bio = formData.bio.trim();
     }
 
-    // اگر رمز عبور جدید وارد شده
     if (formData.newPassword) {
       updateData.current_password = formData.currentPassword;
       updateData.new_password = formData.newPassword;
     }
 
-    // ارسال به والد
     onUpdateInfo(updateData);
   };
 
-  const gradientInputClass =
-    "!bg-gradient-to-br !from-[#B020D5] from-0% !to-[#4D88FF] to-100% !text-white !opacity-40 ";
+const gradientInputClass =
+  "!bg-gradient-to-br !from-[#B020D5]/40 from-0% !to-[#4D88FF]/40 to-100% !text-white !placeholder-white/70";
+
+
+
 
   return (
-    <div className="">
-      <div className="flex flex-col gap-4 ">
-        {/* تیتر */}
-        <Typography variant="h6" className="text-white font-bold mb-4 text-right">
+    <div className="w-full">
+      <div className="flex flex-col gap-4">
+        <Typography variant="h6" className="text-white font-bold mb-2 sm:mb-4 text-center lg:text-right">
           تغییر اطلاعات
         </Typography>
 
-        {/* فرم ویرایش */}
-        <div className="flex flex-row gap-8 flex-1">
-          <div className="w-1/2 space-y-7 ">
+        {/* فرم ویرایش - ریسپانسیو */}
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
+          {/* ستون اول */}
+          <div className="w-full lg:w-1/2 space-y-4 lg:space-y-7">
             <div>
-              <Typography variant="body2" className="text-gray-400 mb-3 text-right">
+              <Typography variant="body2" className="!opacity-80 text-[#ffffff] mb-2 lg:mb-3 text-right">
                 نام و نام خانوادگی
               </Typography>
               <TextInput
+              
                 InputProps={{
                   className: gradientInputClass,
                 }}
                 placeholder="نام خود را وارد کنید"
                 label=""
                 icon=""
-                value={formData.name}
-                onChange={handleInputChange('name')}
-                error={!!errors.name}
-                helperText={errors.name}
+                value={formData.fullname}
+                onChange={handleInputChange('fullname')}
+                error={!!errors.fullname}
+                helperText={errors.fullname}
                 fullWidth
               />
             </div>
 
             <div>
-              <Typography variant="body2" className="text-gray-400 mb-2 text-right">
+              <Typography variant="body2" className="text-[#ffffff] mb-2 text-right">
                 شماره تماس
               </Typography>
               <TextInput
                 InputProps={{
                   className: gradientInputClass,
                 }}
-                placeholder="09123456789"
+                placeholder="شماره خود را وارد کنید "
                 label=""
-                value={formData.phone}
-                onChange={handleInputChange("phone")}
-                error={!!errors.phone}
-                helperText={errors.phone}
+                value={formData.phonenumber}
+                onChange={handleInputChange("phonenumber")}
+                error={!!errors.phonenumber}
+                helperText={errors.phonenumber}
                 fullWidth
               />
             </div>
 
             <div>
-              <Typography variant="body2" className="text-gray-400 mb-2 text-right">
+              <Typography variant="body2" className="text-[#ffffff] mb-2 text-right">
                 رمز عبور قبلی
               </Typography>
               <TextInput
@@ -229,16 +232,17 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
             </div>
           </div>
 
-          <div className=" space-y-7 w-1/2">
+          {/* ستون دوم */}
+          <div className="w-full lg:w-1/2 space-y-4 lg:space-y-7">
             <div>
-              <Typography variant="body2" className="text-gray-400 mb-2 text-right">
+              <Typography variant="body2" className="text-[#ffffff] mb-2 text-right">
                 نام کاربری
               </Typography>
               <TextInput
                 InputProps={{
                   className: gradientInputClass,
                 }}
-                placeholder="ali_ahmadi"
+                placeholder="نام کاربری خود را وارد کنید "
                 label=""
                 value={formData.username}
                 onChange={handleInputChange("username")}
@@ -249,14 +253,14 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
             </div>
 
             <div>
-              <Typography variant="body2" className="text-gray-400 mb-3 text-right">
+              <Typography variant="body2" className="text-[#ffffff] mb-2 lg:mb-3 text-right">
                 ایمیل
               </Typography>
               <TextInput
                 InputProps={{
                   className: gradientInputClass,
                 }}
-                placeholder="example@gmail.com"
+                placeholder="ایمیل خود را وارد کنید "
                 label=""
                 icon=""
                 type="email"
@@ -268,8 +272,8 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
               />
             </div>
 
-            <div className="">
-              <Typography variant="body2" className="text-gray-400 mb-3 text-right">
+            <div>
+              <Typography variant="body2" className="text-[#ffffff] mb-2 lg:mb-3 text-right">
                 رمز عبور جدید
               </Typography>
               <TextInput
@@ -291,8 +295,9 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
           </div>
         </div>
 
-        <div className="space-y-7">
-          <Typography variant="body2" className="text-gray-400 mb-3 text-right">
+        {/* درباره من */}
+        <div className="space-y-2 lg:space-y-4 mt-4">
+          <Typography variant="body2" className="text-[#ffffff] mb-2 lg:mb-3 text-right">
             درباره من
           </Typography>
           <TextInput
@@ -309,7 +314,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
             onChange={handleInputChange('bio')}
             sx={{
               '& .MuiInputBase-root': {
-                height: 150,
+                height: 120,
                 alignItems: 'flex-start',
               },
             }}

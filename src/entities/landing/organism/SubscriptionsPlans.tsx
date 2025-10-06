@@ -1,17 +1,17 @@
 import React from 'react'
-import PlansTypographyMolecule from '../molecules/PlansTypographyMolecule'
+import AmazingOffers from '../molecules/AmazingOffers'
 import PlanCard from './PlanCard'
 import LeafVector from '../atoms/LeafVector/LeafVector'
-import StarVector from '../atoms/StarVector/StarVector'
 import GemVector from '../atoms/GemVector/GemVector'
+import StarVector from '../atoms/StarVector/StarVector'
 
-function Plans() {
+function SubscriptionsPlans() {
   return (
-    <div className=' w-full flex flex-col mb-40'>
-        <div className=' w-full py-5 pt-25 flex flex-col items-center justify-center'>
-            <PlansTypographyMolecule></PlansTypographyMolecule>
+    <div className='w-full h-[55rem]'>
+        <div className='w-full h-[20%]'>
+            <AmazingOffers></AmazingOffers>
         </div>
-        <div className='w-full py-10 px-5 flex flex-row'>
+        <div className='w-full px-5 flex flex-row'>
             
             <PlanCard 
             className='w-[35%] flex items-center justify-center'
@@ -61,4 +61,4 @@ function Plans() {
   )
 }
 
-export default Plans
+export default SubscriptionsPlans

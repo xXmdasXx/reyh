@@ -6,7 +6,7 @@ import SignupInput from "../molecules/FormFields/SignupInput"
 import PrimaryButton from "@/entities/global/atoms/Button/PrimaryButton"
 import CheckboxAtom from "@/entities/global/atoms/Checkbox/CheckboxAtom"
 import DontHaveAccSignup from "@/entities/auth/molecules/DontHaveAcc/DontHaveAccSignup"
-import { Alert } from "@mui/material"
+import SnackbarAtom from "@/entities/global/atoms/Snackbar/SnackbarAtom"
 import TypographyAtom from "@/entities/global/atoms/Typography/TypographyAtom"
 import { api } from "@/lib/Axios"
 
@@ -16,25 +16,25 @@ function SignupFrameOrganism() {
   const [password, setPassword] = useState("")
   const [acceptTerms, setAcceptTerms] = useState(false)
   const [errors, setErrors] = useState({ username: "", email: "", password: "" })
-  const [alertMessage, setAlertMessage] = useState("")
-  const [showAlert, setShowAlert] = useState(false)
-  const [alertSeverity, setAlertSeverity] = useState<"error" | "success">("error")
+  const [snackbarMessage, setSnackbarMessage] = useState("")
+  const [showSnackbar, setShowSnackbar] = useState(false)
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">("error")
   const [loading, setLoading] = useState(false)
 
   const handleAcceptTermsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAcceptTerms(event.target.checked)
   }
 
-  // تابع اعتبارسنجی ایمیل (باید @ داشته باشد و با .com تمام شود)
+  // ولیدیشن ایمیل
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.com$/i.test(email)
 
-  // تابع اعتبارسنجی رمز عبور (حداقل 8 کاراکتر)
+  // ولیدیشن رمز عبور (حداقل 8 کاراکتر)
   const isValidPassword = (password: string) => password.length >= 8
 
-  // تابع اعتبارسنجی نام کاربری (حداقل 3 کاراکتر، فقط حروف، عدد و _)
+  // ولیدیشن نام کاربری (حداقل 3 کاراکتر)
   const isValidUsername = (username: string) => /^[a-zA-Z0-9_.]+$/.test(username) && username.length >= 3
 
-  // اعتبارسنجی کامل و همزمان ست کردن Alert و خطاها روی فیلدها
+  // ولیدیشن داخلی کامل
   const validateInputs = () => {
     const newErrors = { username: "", email: "", password: "" }
     let hasError = false
@@ -78,17 +78,21 @@ function SignupFrameOrganism() {
     setErrors(newErrors)
 
     if (hasError) {
-      setAlertMessage(alertMsg)
-      setAlertSeverity("error")
-      setShowAlert(true)
+      setSnackbarMessage(alertMsg)
+      setSnackbarSeverity("error")
+      setShowSnackbar(true)
     }
 
     return !hasError
   }
 
+  const handleCloseSnackbar = () => {
+    setShowSnackbar(false)
+  }
+
   const handleSignup = async () => {
-    setShowAlert(false)
-    setAlertMessage("")
+    setShowSnackbar(false)
+    setSnackbarMessage("")
 
     if (!validateInputs()) return
 
@@ -108,9 +112,9 @@ function SignupFrameOrganism() {
 
       console.log("Signup success:", response.data)
 
-      setAlertSeverity("success")
-      setAlertMessage("ثبت نام با موفقیت انجام شد، لطفا وارد شوید")
-      setShowAlert(true)
+      setSnackbarSeverity("success")
+      setSnackbarMessage("ثبت نام با موفقیت انجام شد، لطفا وارد شوید")
+      setShowSnackbar(true)
 
       setTimeout(() => {
         window.location.href = '/login'
@@ -118,93 +122,97 @@ function SignupFrameOrganism() {
     } catch (error: any) {
       console.error("Signup failed:", error.response?.data)
 
-      setAlertSeverity("error")
+      setSnackbarSeverity("error")
+      
+      // پیام خطا از بک‌اند - دست نمی‌زنیم
       if (error.response?.data?.detail) {
         if (Array.isArray(error.response.data.detail)) {
           const errorMessages = error.response.data.detail.map((err: any) => err.msg).join(" - ")
-          setAlertMessage(errorMessages)
+          setSnackbarMessage(errorMessages)
         } else if (typeof error.response.data.detail === "string") {
-          setAlertMessage(error.response.data.detail)
+          setSnackbarMessage(error.response.data.detail)
         } else {
-          setAlertMessage("ثبت نام انجام نشد، لطفا دوباره تلاش کنید")
+          setSnackbarMessage("ثبت نام انجام نشد، لطفا دوباره تلاش کنید")
         }
       } else if (error.response?.data?.message) {
-        setAlertMessage(error.response.data.message)
+        setSnackbarMessage(error.response.data.message)
       } else if (error.message) {
-        setAlertMessage("خطا در برقراری ارتباط با سرور")
+        setSnackbarMessage("خطا در برقراری ارتباط با سرور")
       } else {
-        setAlertMessage("خطای نامشخص رخ داده است")
+        setSnackbarMessage("خطای نامشخص رخ داده است")
       }
 
-      setShowAlert(true)
+      setShowSnackbar(true)
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <GlassCard
-      height="650px"
-      width="500px"
-      className="!w-auto !max-w-[500px] mx-5 sm:!w-[500px] sm:!px-10"
-    >
-      <SignupLabel />
-
-      <Alert
-        severity={alertSeverity}
-        className={`!bg-gray-500/20 !rounded-xl !mt-5 !text-white !transition-opacity !duration-200 ${
-          showAlert ? '!visible !opacity-100' : '!invisible !opacity-0'
-        }`}
+    <>
+      <GlassCard
+        height="580px"
+        width="500px"
+        className="!w-auto !max-w-[500px] mx-5 sm:!w-[500px] sm:!px-10"
       >
-        {alertMessage || ' '}
-      </Alert>
+        <SignupLabel />
 
-      <SignupInput
-        className='!mt-3'
-        valueUsername={username}
-        valueEmail={email}
-        valuePassword={password}
-        onChangeUsername={(e: any) => {
-          setUsername(e.target.value)
-          if (errors.username) setErrors(prev => ({ ...prev, username: "" }))
-        }}
-        onChangeEmail={(e: any) => {
-          setEmail(e.target.value)
-          if (errors.email) setErrors(prev => ({ ...prev, email: "" }))
-        }}
-        onChangePassword={(e: any) => {
-          setPassword(e.target.value)
-          if (errors.password) setErrors(prev => ({ ...prev, password: "" }))
-        }}
-        errorUsername={errors.username}
-        errorEmail={errors.email}
-        errorPassword={errors.password}
+        <SignupInput
+          className='!mt-3'
+          valueUsername={username}
+          valueEmail={email}
+          valuePassword={password}
+          onChangeUsername={(e: any) => {
+            setUsername(e.target.value)
+            if (errors.username) setErrors(prev => ({ ...prev, username: "" }))
+          }}
+          onChangeEmail={(e: any) => {
+            setEmail(e.target.value)
+            if (errors.email) setErrors(prev => ({ ...prev, email: "" }))
+          }}
+          onChangePassword={(e: any) => {
+            setPassword(e.target.value)
+            if (errors.password) setErrors(prev => ({ ...prev, password: "" }))
+          }}
+          errorUsername={errors.username}
+          errorEmail={errors.email}
+          errorPassword={errors.password}
+        />
+
+        <CheckboxAtom
+          id="acceptTerms"
+          checked={acceptTerms}
+          onChange={handleAcceptTermsChange}
+          label={
+            <TypographyAtom variant="body2" sx={{ color: "#E4E4E4" }}>
+              قوانین را می‌پذیرم
+            </TypographyAtom>
+          }
+          className=""
+          sx={{}}
+        />
+
+        <PrimaryButton onClick={handleSignup} disabled={loading}>
+          {loading ? "در حال ثبت نام..." : "ثبت نام"}
+        </PrimaryButton>
+
+        <DontHaveAccSignup
+          href="/login"
+          text="حساب کاربری دارید؟"
+          linkText="ورود"
+          className="mt-8 custom-class"
+        />
+      </GlassCard>
+
+      <SnackbarAtom
+        open={showSnackbar}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={handleCloseSnackbar}
+        autoHideDuration={4000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       />
-
-      <CheckboxAtom
-        id="acceptTerms"
-        checked={acceptTerms}
-        onChange={handleAcceptTermsChange}
-        label={
-          <TypographyAtom variant="body2" sx={{ color: "#E4E4E4" }}>
-            قوانین را می‌پذیرم
-          </TypographyAtom>
-        }
-        className=""
-        sx={{}}
-      />
-
-      <PrimaryButton onClick={handleSignup} disabled={loading}>
-        {loading ? "در حال ثبت نام..." : "ثبت نام"}
-      </PrimaryButton>
-
-      <DontHaveAccSignup
-        href="/login"
-        text="حساب کاربری دارید؟"
-        linkText="ورود"
-        className="mt-8 custom-class"
-      />
-    </GlassCard>
+    </>
   )
 }
 

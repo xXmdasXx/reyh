@@ -1,36 +1,44 @@
-// src/entities/profile/organisms/account/Account.tsx
+// src/entities/profile/organisms/Account/Account.tsx
 'use client'
 import React, { useState, useEffect } from "react";
 import Typography from "../../../global/atoms/Typography/TypographyAtom";
 import ProfileInfoDisplay from "../../molecules/ProfileInfoDisplay/ProfileInfoDisplay";
 import ProfileEditForm from "../../molecules/ProfileEditForm/ProfileEditForm";
 import { api } from "@/lib/Axios";
-import { Alert } from "@mui/material";
+import SnackbarAtom from "@/entities/global/atoms/Snackbar/SnackbarAtom";
 
 const Account: React.FC = () => {
   const [userInfo, setUserInfo] = useState({
-    name: "",
+    fullname: "",
     email: "",
-    phone: "",
-    password: "",
-    username: ""
+    phonenumber: "",
+    username: "",
+    subscription: "",
+    subscription_expires_at: "",
+    created_at: "",
+    products: [],
+    collections: [],
+    files: []
   });
 
   const [loading, setLoading] = useState(true);
   const [updateLoading, setUpdateLoading] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertSeverity, setAlertSeverity] = useState<"error" | "success">("error");
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">("error");
 
   // دریافت اطلاعات کاربر هنگام بارگذاری صفحه
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token');
-        if (!token) return;
+        if (!token) {
+          window.location.href = '/login';
+          return;
+        }
 
-        // فرض می‌کنیم endpoint برای دریافت اطلاعات کاربر /user یا /me است
-        const response = await api.get('me', {
+        // درخواست GET به /account با Bearer Token
+        const response = await api.get('account', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -38,18 +46,23 @@ const Account: React.FC = () => {
 
         if (response.data) {
           setUserInfo({
-            name: response.data.name || "",
+            fullname: response.data.fullname || "",
             email: response.data.email || "",
-            phone: response.data.phone || "",
-            password: "********", // رمز عبور را نمایش نمی‌دهیم
-            username: response.data.username || ""
+            phonenumber: response.data.phonenumber || "",
+            username: response.data.username || "",
+            subscription: response.data.subscription || "Free",
+            subscription_expires_at: response.data.subscription_expires_at || "",
+            created_at: response.data.created_at || "",
+            products: response.data.products || [],
+            collections: response.data.collections || [],
+            files: response.data.files || []
           });
         }
       } catch (error: any) {
         console.error("Failed to fetch user data:", error);
-        setAlertSeverity("error");
-        setAlertMessage("خطا در دریافت اطلاعات کاربر");
-        setShowAlert(true);
+        setSnackbarSeverity("error");
+        setSnackbarMessage("خطا در دریافت اطلاعات کاربر");
+        setShowSnackbar(true);
       } finally {
         setLoading(false);
       }
@@ -60,68 +73,74 @@ const Account: React.FC = () => {
 
   const handleUpdateInfo = async (newInfo: any) => {
     setUpdateLoading(true);
-    setShowAlert(false);
+    setShowSnackbar(false);
 
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        setAlertSeverity("error");
-        setAlertMessage("لطفا ابتدا وارد شوید");
-        setShowAlert(true);
+        setSnackbarSeverity("error");
+        setSnackbarMessage("لطفا ابتدا وارد شوید");
+        setShowSnackbar(true);
         return;
       }
 
-      // ارسال درخواست به /update_user
+      // ارسال درخواست PUT به /update_user با Bearer Token
       const response = await api.put('update_user', newInfo, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
 
       console.log("Update success:", response.data);
 
-      // به‌روزرسانی state
-      setUserInfo(prev => ({ ...prev, ...newInfo }));
+      // به‌روزرسانی state با داده‌های جدید
+      setUserInfo(prev => ({ 
+        ...prev, 
+        fullname: newInfo.fullname || prev.fullname,
+        email: newInfo.email || prev.email,
+        phonenumber: newInfo.phonenumber || prev.phonenumber,
+        username: newInfo.username || prev.username
+      }));
 
       // نمایش پیام موفقیت
-      setAlertSeverity("success");
-      setAlertMessage("اطلاعات با موفقیت به‌روزرسانی شد");
-      setShowAlert(true);
-
-      // پنهان کردن پیام بعد از 3 ثانیه
-      setTimeout(() => {
-        setShowAlert(false);
-      }, 3000);
+      setSnackbarSeverity("success");
+      setSnackbarMessage("اطلاعات با موفقیت به‌روزرسانی شد");
+      setShowSnackbar(true);
 
     } catch (error: any) {
       console.error("Update failed:", error.response?.data);
 
-      setAlertSeverity("error");
+      setSnackbarSeverity("error");
       
       // نمایش خطای دقیق بک‌اند
       if (error.response?.data?.detail) {
         if (typeof error.response.data.detail === 'string') {
-          setAlertMessage(error.response.data.detail);
+          setSnackbarMessage(error.response.data.detail);
         } else if (Array.isArray(error.response.data.detail)) {
           const errorMessages = error.response.data.detail
             .map((err: any) => err.msg)
             .join(' - ');
-          setAlertMessage(errorMessages);
+          setSnackbarMessage(errorMessages);
         } else {
-          setAlertMessage("خطا در به‌روزرسانی اطلاعات");
+          setSnackbarMessage("خطا در به‌روزرسانی اطلاعات");
         }
       } else if (error.response?.data?.message) {
-        setAlertMessage(error.response.data.message);
+        setSnackbarMessage(error.response.data.message);
       } else if (error.message) {
-        setAlertMessage("خطا در برقراری ارتباط با سرور");
+        setSnackbarMessage("خطا در برقراری ارتباط با سرور");
       } else {
-        setAlertMessage("خطای نامشخص رخ داده است");
+        setSnackbarMessage("خطای نامشخص رخ داده است");
       }
 
-      setShowAlert(true);
+      setShowSnackbar(true);
     } finally {
       setUpdateLoading(false);
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setShowSnackbar(false);
   };
 
   if (loading) {
@@ -133,31 +152,21 @@ const Account: React.FC = () => {
   }
 
   return (
-    <div className="p-12 flex flex-col gap-10">
+    <div className="p-4 sm:p-8 lg:p-12 flex flex-col gap-6 lg:gap-10">
       {/* تیتر بالای صفحه */}
-      <Typography variant="h4" className="font-bold text-white">
+      <Typography variant="h4" className="font-bold text-white text-center lg:text-right">
         اطلاعات کاربری
       </Typography>
 
-      {/* Alert برای نمایش پیام‌ها */}
-      <Alert
-        severity={alertSeverity}
-        className={`!bg-gray-500/20 !rounded-xl !text-white !transition-opacity !duration-200 ${
-          showAlert ? '!visible !opacity-100' : '!invisible !opacity-0'
-        }`}
-      >
-        {alertMessage || ' '}
-      </Alert>
-
-      {/* محتوای اصلی - دو بخش نصف نصف */}
-      <div className="flex gap-15 ">
+      {/* محتوای اصلی - ریسپانسیو */}
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
         {/* بخش راست - نمایش اطلاعات */}
-        <div className=" flex-1 w-1/2">
+        <div className="w-full lg:w-1/2">
           <ProfileInfoDisplay userInfo={userInfo} />
         </div>
 
         {/* بخش چپ - فرم تغییرات */}
-        <div className=" w-1/2 flex-1">
+        <div className="w-full lg:w-1/2">
           <ProfileEditForm 
             userInfo={userInfo} 
             onUpdateInfo={handleUpdateInfo}
@@ -165,6 +174,16 @@ const Account: React.FC = () => {
           />
         </div>
       </div>
+
+      {/* Snackbar */}
+      <SnackbarAtom
+        open={showSnackbar}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={handleCloseSnackbar}
+        autoHideDuration={4000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      />
     </div>
   );
 };

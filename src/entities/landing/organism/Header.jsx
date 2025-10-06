@@ -19,7 +19,7 @@ function HeaderOrganism() {
 
         <div className='h-full flex flex-row items-center justify-end xl:w-[28%] lg:w-[30%] w-[83%]'>
           <HeaderIconsMolecule className='flex flex-row mx-3'></HeaderIconsMolecule>
-          <ButtonCenterGradient label={'ورود / ثبت نام'}></ButtonCenterGradient>
+          <ButtonCenterGradient label={'ورود / ثبت نام'} redirectTo={'/login'}></ButtonCenterGradient>
         </div>
 
       </header>

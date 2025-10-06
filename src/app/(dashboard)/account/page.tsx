@@ -1,4 +1,3 @@
-// src/app/(dashboard)/account/page.tsx
 'use client'
 import React, { useEffect, useState } from 'react'
 import Account from '@/entities/profile/organisms/Account/Account'
@@ -10,21 +9,24 @@ function AccountPage() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // چک کردن توکن
     const token = localStorage.getItem('token')
     
     if (!token) {
-      // اگر توکن نبود به صفحه noplan برو
       router.push('/noplan')
     } else {
-      // اگر توکن بود صفحه را نمایش بده
       setIsAuthenticated(true)
     }
     
     setIsLoading(false)
   }, [router])
 
-  // در حین بررسی توکن چیزی نمایش نده
+  // تغییر title
+  useEffect(() => {
+    if (isAuthenticated) {
+      document.title = "حساب کاربری"
+    }
+  }, [isAuthenticated])
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -33,7 +35,6 @@ function AccountPage() {
     )
   }
 
-  // اگر authenticated نبود چیزی نمایش نده (چون redirect شده)
   if (!isAuthenticated) {
     return null
   }

@@ -9,7 +9,7 @@ import TrustFooterMolecule from '../molecules/TrustFooterMolecule'
 
 function Footer() {
   return (
-    <div className='w-full pb-10 max-w-[1536px] h-full flex flex-row'>
+    <div className='w-full pb-10 px-10 max-w-[1536px] h-full flex flex-row'>
         
         <div className='w-[30%] h-full'>
             <EchoraFooterMolecule></EchoraFooterMolecule>
