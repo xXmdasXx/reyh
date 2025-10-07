@@ -1,10 +1,8 @@
-// entries/profile/organisms/Sidebar.tsx
+// src/entities/profile/organisms/SidebarNavigation/Sidebar.tsx
 'use client'
 import React, { useState } from "react";
 import SidebarItem from "../../molecules/SidebarItem/SidebarItem";
 import Typography from "../../../global/atoms/Typography/TypographyAtom"; 
-
-// ایمپورت آیکون‌ها از متریال
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
@@ -14,6 +12,7 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { useRouter } from "next/navigation";
 import PrimaryButton from "@/entities/global/atoms/Button/PrimaryButton";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import { removeAuthToken } from "@/lib/Axios";
 
 interface SidebarProps {
   activePage: string;
@@ -21,7 +20,6 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate }) => {
-  const [checked, setChecked] = useState(false);
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
   const router = useRouter();
 
@@ -38,9 +36,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate }) => {
   };
 
   const handleLogout = () => {
-    // پاک کردن توکن و اطلاعات کاربر از localStorage
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    // استفاده از تابع جدید برای پاک کردن توکن از localStorage و Cookie
+    removeAuthToken();
     
     // بستن دیالوگ
     setOpenLogoutDialog(false);
@@ -105,9 +102,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate }) => {
             },
           }}
         >
-          {/* آیکون خروج */}
           <LogoutOutlinedIcon style={{ fontSize: "1.3rem" }} />
-          {/* متن */}
           <span>خروج از حساب</span>
         </PrimaryButton>
       </div>
@@ -128,7 +123,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate }) => {
         <DialogTitle sx={{ textAlign: '', fontFamily: 'IRANSansWeb' }}>
           خروج از حساب کاربری
         </DialogTitle>
-        <DialogContent sx={{  fontFamily: 'IRANSansWeb' }}>
+        <DialogContent sx={{ fontFamily: 'IRANSansWeb' }}>
           <Typography variant="body1" sx={{ color: '#e4e4e4' }}>
             آیا مطمئن هستید که می‌خواهید از حساب کاربری خود خارج شوید؟
           </Typography>
@@ -168,5 +163,3 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate }) => {
 };
 
 export default Sidebar;
-
-

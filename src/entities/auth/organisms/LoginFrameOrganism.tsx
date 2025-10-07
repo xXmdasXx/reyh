@@ -1,3 +1,4 @@
+// src/entities/auth/organisms/LoginFrameOrganism.tsx
 'use client'
 import React, { useState, useEffect } from 'react'
 import GlassCard from '../../global/atoms/Card/GlassCard'
@@ -7,7 +8,7 @@ import PrimaryButton from '@/entities/global/atoms/Button/PrimaryButton'
 import CheckboxAtom from '@/entities/global/atoms/Checkbox/CheckboxAtom'
 import DontHaveAccLogin from '@/entities/auth/molecules/DontHaveAcc/DontHaveAccLogin'
 import SnackbarAtom from '@/entities/global/atoms/Snackbar/SnackbarAtom'
-import { api } from '@/lib/Axios'
+import { api, setAuthToken } from '@/lib/Axios'
 
 export default function LoginFrameOrganism() {
   const [mounted, setMounted] = useState(false)
@@ -30,7 +31,6 @@ export default function LoginFrameOrganism() {
     setRememberMe(event.target.checked)
   }
 
-  // ولیدیشن داخلی - فقط چک می‌کند که فیلدها خالی نباشند
   const validateInputs = () => {
     let message = ''
     const newErrors: { username?: string; password?: string } = {}
@@ -67,7 +67,6 @@ export default function LoginFrameOrganism() {
     setShowSnackbar(false)
     setSnackbarMessage('')
 
-    // ولیدیشن داخلی
     if (!validateInputs()) {
       return
     }
@@ -83,7 +82,8 @@ export default function LoginFrameOrganism() {
       const response = await api.post('login', loginData)
 
       if (response.data.token) {
-        localStorage.setItem('token', response.data.token)
+        // استفاده از تابع جدید برای ذخیره توکن در localStorage و Cookie
+        setAuthToken(response.data.token)
         localStorage.setItem('user', JSON.stringify(response.data.user))
 
         setSnackbarMessage('ورود با موفقیت انجام شد، در حال انتقال...')
@@ -91,7 +91,7 @@ export default function LoginFrameOrganism() {
         setShowSnackbar(true)
 
         setTimeout(() => {
-          window.location.href = '/account'
+          window.location.href = '/dashboard'
         }, 1500)
       } else {
         setSnackbarMessage('ورود انجام شد اما توکن دریافت نشد')
@@ -102,7 +102,6 @@ export default function LoginFrameOrganism() {
       console.error('Login failed:', error.response?.data)
       setSnackbarSeverity('error')
 
-      // پیام خطا از بک‌اند - دست نمی‌زنیم
       if (error.response?.data?.detail) {
         if (Array.isArray(error.response.data.detail)) {
           const errorMessages = error.response.data.detail
@@ -141,7 +140,6 @@ export default function LoginFrameOrganism() {
   return (
     <>
       <GlassCard
-        
         width="500px"
         className="!w-auto !max-w-[500px] mx-5 sm:!h-[530px] md:!h-[490px] sm:!w-[500px]"
       >

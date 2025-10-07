@@ -122,45 +122,28 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
   };
 
   const handleSubmit = () => {
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
-    const updateData: any = {};
+    const updateData: any = {
+      fullname: formData.fullname.trim(),
+      email: formData.email.trim(),
+      phonenumber: formData.phonenumber.trim(),
+      username: formData.username.trim(),
+      bio: formData.bio.trim() || "" // Always include bio, even if empty
+    };
 
-    if (formData.fullname.trim() !== userInfo.fullname) {
-      updateData.fullname = formData.fullname.trim();
-    }
-
-    if (formData.email.trim() !== userInfo.email) {
-      updateData.email = formData.email.trim();
-    }
-
-    if (formData.phonenumber.trim() !== userInfo.phonenumber) {
-      updateData.phonenumber = formData.phonenumber.trim();
-    }
-
-    if (formData.username.trim() !== userInfo.username) {
-      updateData.username = formData.username.trim();
-    }
-
-    if (formData.bio.trim()) {
-      updateData.bio = formData.bio.trim();
-    }
-
+    // Only include password fields if new password is provided
     if (formData.newPassword) {
       updateData.current_password = formData.currentPassword;
       updateData.new_password = formData.newPassword;
     }
 
+    // Always send the update request with all fields
     onUpdateInfo(updateData);
   };
 
-const gradientInputClass =
-  "!bg-gradient-to-br !from-[#B020D5]/40 from-0% !to-[#4D88FF]/40 to-100% !text-white !placeholder-white/70";
-
-
-
+  const gradientInputClass =
+    "!bg-gradient-to-br !from-[#B020D5]/40 from-0% !to-[#4D88FF]/40 to-100% !text-white !placeholder-white/70";
 
   return (
     <div className="w-full">
@@ -178,7 +161,6 @@ const gradientInputClass =
                 نام و نام خانوادگی
               </Typography>
               <TextInput
-              
                 InputProps={{
                   className: gradientInputClass,
                 }}

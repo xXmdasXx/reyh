@@ -52,3 +52,23 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+
+// Helper function to set token
+export const setAuthToken = (token: string) => {
+  localStorage.setItem('token', token);
+  document.cookie = `token=${token}; path=/; max-age=${60 * 60 * 24 * 30}`;
+};
+
+// Helper function to remove token
+export const removeAuthToken = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  document.cookie = 'token=; path=/; max-age=0';
+};
+
+// Helper function to check authentication
+export const isAuthenticated = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  return !!localStorage.getItem('token');
+};

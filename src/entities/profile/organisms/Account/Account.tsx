@@ -105,7 +105,7 @@ const Account: React.FC = () => {
 
       // نمایش پیام موفقیت
       setSnackbarSeverity("success");
-      setSnackbarMessage("اطلاعات با موفقیت به‌روزرسانی شد");
+      setSnackbarMessage(response.data.message || "اطلاعات با موفقیت به‌روزرسانی شد");
       setShowSnackbar(true);
 
     } catch (error: any) {

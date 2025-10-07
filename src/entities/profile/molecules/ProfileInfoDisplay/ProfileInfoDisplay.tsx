@@ -1,3 +1,4 @@
+//ProfileInfoDisplay.tsx
 import React from "react";
 import Typography from "../../../global/atoms/Typography/TypographyAtom";
 import ImageAtom from "../../atom/ImageAtom/ImageAtom";
