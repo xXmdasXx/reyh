@@ -11,11 +11,21 @@ function PlanCard({bgGradient,icon,planName,price,feat1,feat2,feat3,feat4,button
         <BuySubscriptionCard gradient={bgGradient}>
             <div>{icon}</div>
             
-            <TypographyAtom className='!mt-6 !text-[2rem]'>{planName}</TypographyAtom>
+            <TypographyAtom className='!mt-6 !text-[2rem]
+            lg:!text-[2rem]
+            md:!text-[1.5rem]'>{planName}</TypographyAtom>
             
             <div className='w-full flex flex-row'>
-                <TypographyAtom className='!mt-6 !text-[4rem]'>{price}</TypographyAtom>
-                <TypographyAtom className='!mt-6 !text-[2rem] relative top-8'> / در ماه</TypographyAtom>
+                <TypographyAtom className='!mt-6 !text-[3rem]
+                xl:!text-[4rem]
+                lg:!text-[3rem]
+                md:!text-[2rem]'>{price}</TypographyAtom>
+                <TypographyAtom className='!mt-6 !text-[1.3rem] relative top-6
+                2xl:!text-[2rem] 2xl:top-8
+                xl:top-10
+                lg:!text-[1.3rem] lg:top-6
+                md:!text-[0.9rem] md:top-5'
+                > / در ماه</TypographyAtom>
             </div>
             
             <div className='w-full py-5 pb-12'>

@@ -24,6 +24,7 @@ type UserPassFieldProps = TextFieldProps & {
   borderWidth?: string;
   fullWidth?: boolean;
   color?: string;
+  variantType?: "default" | "dashboard" | "login"; // ✅ اضافه شد
 };
 
 const UserPassField: React.FC<UserPassFieldProps> = ({
@@ -41,6 +42,7 @@ const UserPassField: React.FC<UserPassFieldProps> = ({
   sx,
   fullWidth = true,
   color = "#E4E4E4",
+  variantType = "default", // ✅ مقدار پیش‌فرض
   ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -108,12 +110,16 @@ const UserPassField: React.FC<UserPassFieldProps> = ({
           color: color,
         },
         "& .MuiOutlinedInput-root": {
+          // ✅ همه border-radius دارند
           borderRadius: "10px",
           "& fieldset": {
-            borderColor: "gray",
+            // ✅ فقط login رنگ gray دارد، بقیه border دارند اما رنگ متفاوت
+            borderColor: variantType === "login" ? "gray" : "#222",
+            borderWidth: "1px", // ✅ اطمینان از نمایش border برای همه
           },
           "&:hover fieldset": {
-            borderColor: "#E4E4E4",
+            // ✅ فقط login در حالت hover رنگ gray دارد
+            borderColor: variantType === "login" ? "gray" : "#555",
           },
           "&.Mui-focused fieldset": {
             borderColor: "secondary.main",
@@ -129,10 +135,16 @@ const UserPassField: React.FC<UserPassFieldProps> = ({
         input: {
           color: "#fff",
           "&:-webkit-autofill": {
-            WebkitBoxShadow: "0 0 0 1000px #0a0a2a inset",
-            WebkitTextFillColor: "#ffffff",
-            caretColor: "#ffffff",
-            borderRadius: 0
+            WebkitBoxShadow: "0 0 0 1000px transparent inset", // بی‌رنگ (شفاف)
+            WebkitTextFillColor: "#ffffff", // رنگ متن سفید
+            caretColor: "#ffffff", // رنگ نشانگر سفید
+            transition: "background-color 9999s ease-in-out 0s", // جلوگیری از فلاش زرد کروم
+          },
+          "&:-webkit-autofill:hover": {
+            WebkitBoxShadow: "0 0 0 1000px transparent inset",
+          },
+          "&:-webkit-autofill:focus": {
+            WebkitBoxShadow: "0 0 0 1000px transparent inset",
           },
         },
         "& .MuiFormHelperText-root": {
@@ -165,7 +177,7 @@ const UserPassField: React.FC<UserPassFieldProps> = ({
             )}
           </InputAdornment>
         ),
-        ...props.InputProps,
+        ...(props.InputProps || {}),
       }}
     />
   );

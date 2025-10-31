@@ -9,6 +9,7 @@ interface PrimaryButtonProps {
   fullWidth?: boolean;
   className?: string;
   sx?: object;
+  variantType?: "default" | "login"; // ✅ prop جدید اضافه شد
   [key: string]: any;
 }
 
@@ -19,10 +20,38 @@ export default function PrimaryButton({
   disabled,
   fullWidth = true,
   className,
+  variantType = "default", // ✅ مقدار پیش‌فرض
   sx = {},
   ...props
 }: PrimaryButtonProps) {
+  // ✅ تعیین استایل بر اساس variantType
+  const getBackgroundStyle = () => {
+    switch (variantType) {
+      case "login":
+        return {
+          background: 'linear-gradient(to left, #BB19DF, #1529E3)',
+          "&:hover": {
+            background: 'linear-gradient(to left, #a514c7, #1221c0)',
+            opacity: 0.9,
+          },
+        };
+      case "default":
+      default:
+        return {
+          
+          background: 'linear-gradient(to left, #4d88ff5e, #b120d591)', // ✅ دیفالت بدون رنگ
+          "&:hover": {
+            background: 'linear-gradient(to left, #4d88ff46, #b120d57c)',
+          
+          },
+        };
+    }
+  };
+
+  const buttonStyle = getBackgroundStyle();
+
   return (
+    
     <Button
       variant="contained"
       color="primary"
@@ -32,19 +61,14 @@ export default function PrimaryButton({
       fullWidth={fullWidth}
       className={className}
       sx={{
-        ontSize: '22px',
+        
         fontWeight: '700',
         mt: 3,
         height: '48px',
         fontSize: '1.2rem',
-        background: 'linear-gradient(to left, #BB19DF, #1529E3)',
         color: "#fff",
-      
         borderRadius: "12px",
-        "&:hover": {
-          background: 'linear-gradient(to left, #a514c7, #1221c0)',
-          opacity: 0.9,
-        },
+        ...buttonStyle, // ✅ استایل بر اساس variantType
         ...sx,
       }}
       {...props}
@@ -53,3 +77,5 @@ export default function PrimaryButton({
     </Button>
   );
 }
+
+

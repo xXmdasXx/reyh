@@ -14,37 +14,66 @@ function Features() {
   const cardsData = [
     {
       id: 'mixer',
-      icon: <MixerIcon className='!absolute !bottom-18 left-10' width={450}></MixerIcon>,
-      sideIcon: <MixerIcon className='!absolute !bottom-14 left-8' width={320}></MixerIcon>, // Icon for side positions
+      icon: <MixerIcon className='!absolute !bottom-18 left-0 
+      md:!bottom-18 md:left-10' width={450}></MixerIcon>,
+
+      sideIcon: <MixerIcon className='!absolute !bottom-14 left-8' width={320}></MixerIcon>,
+      
       typographyMt: 30,
+      typographyMtSm: 25, // used < md
       sideMarginScale: 0.6, // Custom margin scale for this card in side positions
+      sideMarginScaleSm: 0.55, // used < md
       textHead: 'سیستم لایسنس حرفه‌ای',
+      textHeadClassName:'!mt-20 md:!mt-35',
+      descriptionClassName: '!text-[0.7rem] md:!text-[1rem]',
+      textHeadCenterClassName:'!mt-30 md:!mt-60',
+      descriptionCenterClassName:'',
       discription: <>چند مدل فروش با قرارداد خودکار و دانلود فوری</>
     },
     {
       id: 'concert',
-      icon: <ConcertIcon className='!absolute !bottom-30 right-23' width={320}></ConcertIcon>,
-      sideIcon: <ConcertIcon className='!absolute !bottom-24 right-19' width={250}></ConcertIcon>, // Icon for side positions
+      icon: <ConcertIcon className='!absolute !bottom-25 left-10 right-10
+      md:!bottom-30 md:right-23' width={320}></ConcertIcon>,
+
+      sideIcon: <ConcertIcon className='!absolute !bottom-24 right-10 left-10
+      md:!bottom-24 md:right-19' width={250}></ConcertIcon>,
+      
       typographyMt: 28,
+      typographyMtSm:25,
       sideMarginScale: 0.6, // Custom margin scale for this card in side positions
+      sideMarginScaleSm: 0.55,
+      textHeadClassName:'!mt-13 md:!mt-31',
+      descriptionClassName: '',
+      textHeadCenterClassName:'!mt-28 md:!mt-58',
+      descriptionCenterClassName:'',
       textHead: 'بازاری بزرگ از بیت و سمپل و ساند افکت',
       discription: (
         <>
-          دسترسی مستقیم به جامعه‌ی وسیع آرتیست‌ها و خریدارها برای <br />
+          دسترسی مستقیم به جامعه‌ی وسیع آرتیست‌ها و خریدارها برای
           فروش راحت‌تر
         </>
       )
     },
     {
       id: 'mixman',
-      icon: <MixManIcon className='!absolute !bottom-16 right-14' width={450}></MixManIcon>,
-      sideIcon: <MixManIcon className='!absolute !bottom-17 right-18' width={330}></MixManIcon>, // Icon for side positions
+      icon: <MixManIcon className='!absolute !bottom-16 right-8
+      md:!bottom-16 md:right-14' width={450}></MixManIcon>,
+
+      sideIcon: <MixManIcon className='!absolute !bottom-17 right-8
+      md:!bottom-17 md:right-18' width={330}></MixManIcon>,
+       
       typographyMt: 30,
+      typographyMtSm: 25,
       sideMarginScale: 0.55, // Custom margin scale for this card in side positions
+      sideMarginScaleSm: 0.10,
+      textHeadClassName:'!mt-18 md:!mt-32',
+      descriptionClassName: '!text-[0.7rem]',
+      textHeadCenterClassName:'!mt-30 md:!mt-60',
+      descriptionCenterClassName:'',
       textHead: 'شبکه اجتماعی موزیسین‌ها',
       discription: (
         <>
-          پروفایل اختصاصی مثل لینکدین موسیقی؛ دنبال‌کردن، <br />
+          پروفایل اختصاصی مثل لینکدین موسیقی؛ دنبال‌کردن،
           همکاری، پیام و نمایش پورتفولیو.
         </>
       )
@@ -73,20 +102,17 @@ function Features() {
     const styles = [
       { 
         className: '!relative right-28 bottom-15 !rotate-20',
-        width: '25rem',
-        height: '15rem',
+        cardClassName: '!w-[15rem] !h-[10rem] md:!w-[25rem] md:!h-[15rem]',
         zIndex: 20
       },
       { 
         className: '',
-        width: undefined,
-        height: undefined,
+        cardClassName: '!w-[18rem] !h-[13rem] md:!w-[32rem] md:!h-[22rem]',
         zIndex: 30
       },
       { 
         className: '!relative left-31 top-10 !rotate-[-10deg]',
-        width: '25rem',
-        height: '15rem',
+        cardClassName: '!w-[15rem] !h-[10rem] md:!w-[25rem] md:!h-[15rem]',
         zIndex: 20
       }
     ]
@@ -114,15 +140,13 @@ function Features() {
   // Side cards use the card's specific sideMarginScale value
   const getAdjustedTypographyMt = (cardIndex, position) => {
     const card = cardsData[cardIndex]
-    
-    // If card is in center position, use original typography margin
+    const isMd = typeof window !== 'undefined' ? window.matchMedia('(min-width: 768px)').matches : true
+    const baseMt = isMd ? (card.typographyMt ?? 30) : (card.typographyMtSm ?? card.typographyMt ?? 30)
     if (position === 1) {
-      return card.typographyMt
+      return baseMt
     }
-    
-    // For side cards, use the card's custom marginScale
-    // Each card can have its own marginScale value for perfect positioning
-    return Math.round(card.typographyMt * card.sideMarginScale)
+    const scale = isMd ? (card.sideMarginScale ?? 0.6) : (card.sideMarginScaleSm ?? card.sideMarginScale ?? 0.6)
+    return Math.round(baseMt * scale)
   }
   // ========== CONTENT POSITIONING FIX END ==========
 
@@ -156,12 +180,12 @@ function Features() {
             >
               <FeaturesCardMolecules
                 className={styles.className}
-                width={styles.width}
-                height={styles.height}
+                cardClassName={styles.cardClassName}
                 icon={adjustedIcon} // Using adjusted icon position
-                typographyMt={adjustedTypographyMt} // Using adjusted typography margin with card-specific scale
                 textHead={card.textHead}
                 discription={card.discription}
+                textHeadClassName={position === 1 ? (card.textHeadCenterClassName ?? card.textHeadClassName) : card.textHeadClassName}
+                descriptionClassName={position === 1 ? (card.descriptionCenterClassName ?? card.descriptionClassName) : card.descriptionClassName}
               />
             </motion.div>
           )

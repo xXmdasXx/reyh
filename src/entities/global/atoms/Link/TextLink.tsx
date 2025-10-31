@@ -14,7 +14,7 @@ interface TextLinkProps {
 export default function TextLink({ 
   children,
   href,
-  onClick = () => {},
+  onClick,
   className = "",
   sx = {},
   ...props 
@@ -22,11 +22,11 @@ export default function TextLink({
   return (
     <Link
       href={href}
-      onClick={onClick}
+      {...(onClick ? { onClick } : {})}
       underline="hover"
       variant="body2"
       className={className}  
-      sx={sx}                
+      sx={{ fontFamily: 'IRANSansWeb', ...sx }}                
       {...props}
     >
       {children}

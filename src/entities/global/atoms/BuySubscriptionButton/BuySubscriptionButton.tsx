@@ -5,9 +5,12 @@ interface BuySubscriptionButtonProps {
   className?: string;
   onClick?: () => void;
   dropShadow?: string;
+  children?: React.ReactNode;
+  disabled?: boolean;
+  style?: React.CSSProperties;
 }
 
-function BuySubscriptionButton({className, onClick, dropShadow}:BuySubscriptionButtonProps) {
+function BuySubscriptionButton({className, onClick, dropShadow, children, disabled, style}:BuySubscriptionButtonProps) {
   return (
     <Button 
     className={`!text-white !text-[1.2rem] !shdaow-inner 
@@ -16,7 +19,9 @@ function BuySubscriptionButton({className, onClick, dropShadow}:BuySubscriptionB
     sx={{
       filter: `drop-shadow(0 0 20px ${dropShadow})`
     }}
-    onClick={onClick}>خرید اشتراک</Button>
+    onClick={onClick}
+    disabled={disabled}
+    style={style}>{children || 'خرید اشتراک'}</Button>
   )
 }
 

@@ -108,7 +108,7 @@ function SignupFrameOrganism() {
 
       console.log("Sending signup data:", signupData)
 
-      const response = await api.post("register", signupData)
+      const response = await api.post("auth/register", signupData)
 
       console.log("Signup success:", response.data)
 
@@ -192,7 +192,7 @@ function SignupFrameOrganism() {
           sx={{}}
         />
 
-        <PrimaryButton onClick={handleSignup} disabled={loading}>
+        <PrimaryButton variantType="login" onClick={handleSignup} disabled={loading}>
           {loading ? "در حال ثبت نام..." : "ثبت نام"}
         </PrimaryButton>
 

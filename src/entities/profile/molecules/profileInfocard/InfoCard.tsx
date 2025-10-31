@@ -1,7 +1,8 @@
 // entries/dashboard/molecules/InfoCard.tsx
 import React from "react";
 import Typography from "../../../global/atoms/Typography/TypographyAtom";
-import ImageAtom from "../../../profile/atom/ImageAtom/ImageAtom";
+import ImageAtom from "../../atoms/ImageAtom/ImageAtom";
+
 
 
 interface InfoCardProps {

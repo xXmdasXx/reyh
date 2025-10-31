@@ -10,15 +10,16 @@ interface Props {
   href: string;
   className?: string;
   sx?: object;
+  onClick?: () => void;
 }
 
-const HeaderTypographyLink: React.FC<Props> = ({ text, href, className, sx = {} }) => {
+const HeaderTypographyLink: React.FC<Props> = ({ text, href, className, sx = {}, onClick }) => {
   const pathname = usePathname(); // مسیر فعلی رو میاره
 
   const isActive = pathname === href;
 
   return (
-    <Link href={href} passHref>
+    <Link href={href} passHref onClick={onClick}>
       <Typography
         component="span"
         className={className}

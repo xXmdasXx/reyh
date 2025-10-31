@@ -79,7 +79,7 @@ export default function LoginFrameOrganism() {
         password: password.trim(),
       }
 
-      const response = await api.post('login', loginData)
+      const response = await api.post('auth/login', loginData)
 
       if (response.data.token) {
         // استفاده از تابع جدید برای ذخیره توکن در localStorage و Cookie
@@ -163,7 +163,7 @@ export default function LoginFrameOrganism() {
           sx={{}}
         />
 
-        <PrimaryButton onClick={handleLogin} className='!mt-3 !text-[1rem] !py-5'>
+        <PrimaryButton variantType="login" onClick={handleLogin} className='!mt-3 !text-[1rem] !py-5'>
           {loading ? 'در حال ورود...' : 'ورود'}
         </PrimaryButton>
 

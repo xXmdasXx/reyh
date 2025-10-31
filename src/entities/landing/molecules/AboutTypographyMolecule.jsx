@@ -5,7 +5,8 @@ function AboutTypographyMolecule() {
   return (
     <div>
         <TypographyAtom 
-        className='!text-5xl w-full py-5'
+        className='!text-4xl w-full py-5
+        md:!text-5xl'
         sx={{
         filter: `drop-shadow(0 0 10px #FFFFFF)`
         }}>
@@ -14,7 +15,8 @@ function AboutTypographyMolecule() {
         </TypographyAtom>
 
         <TypographyAtom 
-        className='!text-5xl w-full py-2'
+        className='!text-4xl w-full py-0
+        md:!text-5xl md:py-2'
         sx={{
         filter: `drop-shadow(0 0 10px #FFFFFF)`
         }}>
@@ -23,14 +25,16 @@ function AboutTypographyMolecule() {
         </TypographyAtom>
         
         <TypographyAtom 
-        className='!text-xl !text-white/60 !mt-4'
+        className='!text-lg !text-white/60 !mt-7
+        md:!text-xl
+        xl:!mt-4'
         sx={{
         filter: `drop-shadow(0 0 10px #BC75CB)`
         }}>
-            پلتفرمی برای تولید و فروش بیت‌های حرفه‌ای؛ <br />
-            جایی که هنرمندها می‌تونن سریع، ساده و <br />
-            مطمئن به ریتم و صدای اختصاصی خودشون <br />
-            دست پیدا کنند پلتفرمی برای تولید و فروش <br />
+            پلتفرمی برای تولید و فروش بیت‌های حرفه‌ای؛ 
+            جایی که هنرمندها می‌تونن سریع، ساده و 
+            مطمئن به ریتم و صدای اختصاصی خودشون 
+            دست پیدا کنند پلتفرمی برای تولید و فروش
             بیت‌های حرفه‌ای
         </TypographyAtom>
     </div>

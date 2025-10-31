@@ -1,4 +1,3 @@
-// src/entities/profile/molecules/ProfileEditForm/ProfileEditForm.tsx
 import React, { useState, useEffect } from "react";
 import Typography from "../../../global/atoms/Typography/TypographyAtom";
 import TextInput from "../../../global/atoms/Input/TextInput";
@@ -41,7 +40,6 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
     confirmPassword: ""
   });
 
-  // پر کردن فیلدها با اطلاعات واقعی کاربر
   useEffect(() => {
     setFormData(prev => ({
       ...prev,
@@ -122,110 +120,64 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
   };
 
   const handleSubmit = () => {
-    if (!validateForm()) return;
+  if (!validateForm()) return;
 
-    const updateData: any = {
-      fullname: formData.fullname.trim(),
-      email: formData.email.trim(),
-      phonenumber: formData.phonenumber.trim(),
-      username: formData.username.trim(),
-      bio: formData.bio.trim() || "" // Always include bio, even if empty
-    };
-
-    // Only include password fields if new password is provided
-    if (formData.newPassword) {
-      updateData.current_password = formData.currentPassword;
-      updateData.new_password = formData.newPassword;
-    }
-
-    // Always send the update request with all fields
-    onUpdateInfo(updateData);
+  const updateData: any = {
+    fullname: formData.fullname.trim(),
+    email: formData.email.trim(),
+    phonenumber: formData.phonenumber.trim(),
+    username: formData.username.trim(),
+    bio: formData.bio.trim() || ""
   };
 
+  // اگر کاربر می‌خواهد رمز عبور را تغییر دهد
+  if (formData.newPassword) {
+    updateData.oldpassword = formData.currentPassword;  // تغییر داده شد
+    updateData.newpassword = formData.newPassword;      // تغییر داده شد
+  }
+
+  onUpdateInfo(updateData);
+};
+
+
   const gradientInputClass =
-    "!bg-gradient-to-br !from-[#B020D5]/40 from-0% !to-[#4D88FF]/40 to-100% !text-white !placeholder-white/70";
+    "!bg-gradient-to-br !from-[#b120d580]/40 from-0% !to-[#4d88ff52]/40 to-100% !text-white !placeholder-white/70";
 
-  return (
-    <div className="w-full">
-      <div className="flex flex-col gap-4">
-        <Typography variant="h6" className="text-white font-bold mb-2 sm:mb-4 text-center lg:text-right">
-          تغییر اطلاعات
-        </Typography>
-
-        {/* فرم ویرایش - ریسپانسیو */}
-        <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
-          {/* ستون اول */}
-          <div className="w-full lg:w-1/2 space-y-4 lg:space-y-7">
-            <div>
-              <Typography variant="body2" className="!opacity-80 text-[#ffffff] mb-2 lg:mb-3 text-right">
+    return (
+      <div className="w-full">
+        <div className="flex flex-col gap-4">
+          <Typography variant="h6" className="text-white font-bold mb-2 sm:mb-4 text-right">
+            تغییر اطلاعات کاربری
+          </Typography>
+  
+          {/* سطر اول: نام و نام کاربری */}
+          <div className="w-full flex flex-col md:flex-row gap-6">
+            <div className="w-full">
+              <Typography variant="body2" className="text-white mb-2 text-right">
                 نام و نام خانوادگی
               </Typography>
               <TextInput
-                InputProps={{
-                  className: gradientInputClass,
-                }}
-                placeholder="نام خود را وارد کنید"
-                label=""
+                label="" 
                 icon=""
+                InputProps={{ className: gradientInputClass }}
+                placeholder="نام خود را وارد کنید"
                 value={formData.fullname}
-                onChange={handleInputChange('fullname')}
+                onChange={handleInputChange("fullname")}
                 error={!!errors.fullname}
                 helperText={errors.fullname}
                 fullWidth
               />
             </div>
-
-            <div>
-              <Typography variant="body2" className="text-[#ffffff] mb-2 text-right">
-                شماره تماس
-              </Typography>
-              <TextInput
-                InputProps={{
-                  className: gradientInputClass,
-                }}
-                placeholder="شماره خود را وارد کنید "
-                label=""
-                value={formData.phonenumber}
-                onChange={handleInputChange("phonenumber")}
-                error={!!errors.phonenumber}
-                helperText={errors.phonenumber}
-                fullWidth
-              />
-            </div>
-
-            <div>
-              <Typography variant="body2" className="text-[#ffffff] mb-2 text-right">
-                رمز عبور قبلی
-              </Typography>
-              <TextInput
-                InputProps={{
-                  className: gradientInputClass,
-                }}
-                placeholder="رمز عبور فعلی خود را وارد کنید"
-                label=""
-                icon="lock"
-                type="password"
-                value={formData.currentPassword}
-                onChange={handleInputChange("currentPassword")}
-                error={!!errors.currentPassword}
-                helperText={errors.currentPassword}
-                fullWidth
-              />
-            </div>
-          </div>
-
-          {/* ستون دوم */}
-          <div className="w-full lg:w-1/2 space-y-4 lg:space-y-7">
-            <div>
-              <Typography variant="body2" className="text-[#ffffff] mb-2 text-right">
+  
+            <div className="w-full">
+              <Typography variant="body2" className="text-white mb-2 text-right">
                 نام کاربری
               </Typography>
               <TextInput
-                InputProps={{
-                  className: gradientInputClass,
-                }}
-                placeholder="نام کاربری خود را وارد کنید "
-                label=""
+                label="" 
+                icon=""
+                InputProps={{ className: gradientInputClass }}
+                placeholder="نام کاربری خود را وارد کنید"
                 value={formData.username}
                 onChange={handleInputChange("username")}
                 error={!!errors.username}
@@ -233,51 +185,88 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
                 fullWidth
               />
             </div>
-
-            <div>
-              <Typography variant="body2" className="text-[#ffffff] mb-2 lg:mb-3 text-right">
+          </div>
+  
+          {/* سطر دوم: شماره تماس و ایمیل */}
+          <div className="w-full flex flex-col md:flex-row gap-6">
+            <div className="w-full">
+              <Typography variant="body2" className="text-white mb-2 text-right">
+                شماره تماس
+              </Typography>
+              <TextInput
+                label="" 
+                icon=""
+                InputProps={{ className: gradientInputClass }}
+                placeholder="شماره خود را وارد کنید"
+                value={formData.phonenumber}
+                onChange={handleInputChange("phonenumber")}
+                error={!!errors.phonenumber}
+                helperText={errors.phonenumber}
+                fullWidth
+              />
+            </div>
+  
+            <div className="w-full">
+              <Typography variant="body2" className="text-white mb-2 text-right">
                 ایمیل
               </Typography>
               <TextInput
-                InputProps={{
-                  className: gradientInputClass,
-                }}
-                placeholder="ایمیل خود را وارد کنید "
-                label=""
+                label="" 
                 icon=""
+                InputProps={{ className: gradientInputClass }}
+                placeholder="ایمیل خود را وارد کنید"
                 type="email"
                 value={formData.email}
-                onChange={handleInputChange('email')}
+                onChange={handleInputChange("email")}
                 error={!!errors.email}
                 helperText={errors.email}
                 fullWidth
               />
             </div>
-
-            <div>
-              <Typography variant="body2" className="text-[#ffffff] mb-2 lg:mb-3 text-right">
+          </div>
+  
+          {/* سطر سوم: رمز عبور فعلی و جدید */}
+          <div className="w-full flex flex-col md:flex-row gap-6">
+            <div className="w-full">
+              <Typography variant="body2" className="text-white mb-2 text-right">
+                رمز عبور فعلی
+              </Typography>
+              <TextInput
+                label="" 
+                
+                InputProps={{ className: gradientInputClass }}
+                placeholder="رمز عبور فعلی خود را وارد کنید"
+                type="password"
+                icon="lock"
+                value={formData.currentPassword}
+                onChange={handleInputChange("currentPassword")}
+                error={!!errors.currentPassword}
+                helperText={errors.currentPassword}
+                fullWidth
+              />
+            </div>
+  
+            <div className="w-full">
+              <Typography variant="body2" className="text-white mb-2 text-right">
                 رمز عبور جدید
               </Typography>
               <TextInput
-                InputProps={{
-                  className: gradientInputClass,
-                }}
+                label="" 
+                
+                InputProps={{ className: gradientInputClass }}
                 placeholder="رمز عبور جدید خود را وارد کنید"
-                label=""
-                id="password"
-                icon="lock"
                 type="password"
+                icon="lock"
                 value={formData.newPassword}
-                onChange={handleInputChange('newPassword')}
+                onChange={handleInputChange("newPassword")}
                 error={!!errors.newPassword}
                 helperText={errors.newPassword}
                 fullWidth
               />
             </div>
           </div>
-        </div>
-
-        {/* درباره من */}
+  
+           {/* درباره من */}
         <div className="space-y-2 lg:space-y-4 mt-4">
           <Typography variant="body2" className="text-[#ffffff] mb-2 lg:mb-3 text-right">
             درباره من
@@ -304,20 +293,20 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
           />
         </div>
 
-        {/* دکمه ذخیره */}
-        <div className="mt-4">
-          <PrimaryButton
-            onClick={handleSubmit}
-            disabled={loading}
-            className="!w-full"
-            sx={{ mt: 0 }}
-          >
-            {loading ? 'در حال ذخیره...' : 'ذخیره تغییرات'}
-          </PrimaryButton>
+  
+          {/* دکمه ذخیره */}
+          <div className="mt-4">
+            <PrimaryButton
+              onClick={handleSubmit}
+              disabled={loading}
+              className="!w-full"
+            >
+              {loading ? "در حال ذخیره..." : "ذخیره تغییرات"}
+            </PrimaryButton>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default ProfileEditForm;

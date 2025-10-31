@@ -1,0 +1,46 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+      "title": "Echora",
+      "description": "A platform for selling and buying samples and beats for music",
+      "version": "0.1.0"
+    },
+    "servers": [
+    { "url": "/api" }
+    ],
+    "paths": {
+      "/users/purchases": {
+        "get": {
+        "tags": ["Users"],
+          "summary": "دریافت اطلاعات خرید و اشتراک کاربر",
+          "operationId": "get_user_purchases_users_purchases_get",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                "schema": {}
+                }
+              }
+            }
+          },
+        "security": [ { "OAuth2PasswordBearer": [] } ]
+        }
+      }
+    },
+    "components": {
+      "securitySchemes": {
+        "OAuth2PasswordBearer": {
+          "type": "oauth2",
+          "flows": {
+            "password": {
+            "scopes": {},
+              "tokenUrl": "api/login"
+            }
+          }
+        }
+      }
+    }
+  }
+
+

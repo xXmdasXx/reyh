@@ -4,7 +4,8 @@ import { Box } from "@mui/material";
 export default function QuoteText({ text }: { text: string }) {
   return (
     <Box>
-      <Text variant="body1" className='!text-lg !text-white/70'>“{text}”</Text>
+      <Text variant="body1" className='!text-md !text-white/70
+      sm:!text-lg'>“{text}”</Text>
     </Box>
   );
 }

@@ -6,7 +6,9 @@ import PhoneVector from '../atoms/PhoneVector/PhoneVector'
 
 function ContactUsFooterMolecule() {
   return (
-    <div className='flex flex-col pt-20 pr-20'>
+    <div className='flex flex-col pt-10 pr-10
+    sm:pr-5
+    lg:pr-20 lg:pt-20'>
         <TypographyAtom className='!text-xl'>ارتباط با ما</TypographyAtom>
 
         <div className='flex flex-row mt-4'>

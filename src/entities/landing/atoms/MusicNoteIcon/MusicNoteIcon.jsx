@@ -2,16 +2,15 @@ import React from 'react'
 import Image from 'next/image'
 import musicNote from '../../../../../public/musicNote.png'
 
-function MusicNoteIcon({...props}) {
+function MusicNoteIcon({className='',...props}) {
   return (
-    <div {...props}>
-        <Image
+    <div className={`relative ${className}`} {...props}>
+      <Image
         src={musicNote}
-        alt='Music Note'
-        width={407}
-        height={458}
-        >
-        </Image>
+        alt='Music Cassette'
+        fill
+        className="object-contain"
+      />
     </div>
   )
 }

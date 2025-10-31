@@ -3,7 +3,7 @@ export default function MegaBlob() {
     <svg
       viewBox="0 0 1920 1080"
       xmlns="http://www.w3.org/2000/svg"
-      className="w-auto h-auto"
+      className="w-full h-full"
     >
       <g opacity="0.15">
         {/* Dark purple ellipse */}

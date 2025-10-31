@@ -4,7 +4,8 @@ import TypographyAtom from '@/entities/global/atoms/Typography/TypographyAtom'
 
 function QuickAccessFooterMolecule() {
   return (
-    <div className='flex flex-col p-20'>
+    <div className='flex flex-col pr-10 pt-10
+    lg:pt-20 lg:pr-20 '>
         
         <TypographyAtom className='!text-xl'>دسترسی سریع</TypographyAtom>
 

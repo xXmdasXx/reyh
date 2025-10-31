@@ -1,4 +1,3 @@
-// src/entities/profile/organisms/Account/Account.tsx
 'use client'
 import React, { useState, useEffect } from "react";
 import Typography from "../../../global/atoms/Typography/TypographyAtom";
@@ -27,7 +26,6 @@ const Account: React.FC = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">("error");
 
-  // دریافت اطلاعات کاربر هنگام بارگذاری صفحه
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -37,8 +35,7 @@ const Account: React.FC = () => {
           return;
         }
 
-        // درخواست GET به /account با Bearer Token
-        const response = await api.get('account', {
+        const response = await api.get('users/account', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -84,26 +81,41 @@ const Account: React.FC = () => {
         return;
       }
 
-      // ارسال درخواست PUT به /update_user با Bearer Token
-      const response = await api.put('update_user', newInfo, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
+      const formData = new URLSearchParams();
+      Object.keys(newInfo).forEach(key => {
+        if (newInfo[key] !== undefined && newInfo[key] !== null && newInfo[key] !== '') {
+          formData.append(key, newInfo[key]);
         }
       });
 
-      console.log("Update success:", response.data);
+      const response = await api.put('users/update', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      });
 
-      // به‌روزرسانی state با داده‌های جدید
-      setUserInfo(prev => ({ 
-        ...prev, 
-        fullname: newInfo.fullname || prev.fullname,
-        email: newInfo.email || prev.email,
-        phonenumber: newInfo.phonenumber || prev.phonenumber,
-        username: newInfo.username || prev.username
-      }));
+      const userResponse = await api.get('users/account', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
 
-      // نمایش پیام موفقیت
+      if (userResponse.data) {
+        setUserInfo({
+          fullname: userResponse.data.fullname || "",
+          email: userResponse.data.email || "",
+          phonenumber: userResponse.data.phonenumber || "",
+          username: userResponse.data.username || "",
+          subscription: userResponse.data.subscription || "Free",
+          subscription_expires_at: userResponse.data.subscription_expires_at || "",
+          created_at: userResponse.data.created_at || "",
+          products: userResponse.data.products || [],
+          collections: userResponse.data.collections || [],
+          files: userResponse.data.files || []
+        });
+      }
+
       setSnackbarSeverity("success");
       setSnackbarMessage(response.data.message || "اطلاعات با موفقیت به‌روزرسانی شد");
       setShowSnackbar(true);
@@ -113,7 +125,6 @@ const Account: React.FC = () => {
 
       setSnackbarSeverity("error");
       
-      // نمایش خطای دقیق بک‌اند
       if (error.response?.data?.detail) {
         if (typeof error.response.data.detail === 'string') {
           setSnackbarMessage(error.response.data.detail);
@@ -152,21 +163,21 @@ const Account: React.FC = () => {
   }
 
   return (
-    <div className="p-4 sm:p-8 lg:p-12 flex flex-col gap-6 lg:gap-10">
+    <div className="p-4 sm:p-8  lg:p-12 flex flex-col gap-6 lg:gap-10">
       {/* تیتر بالای صفحه */}
-      <Typography variant="h4" className="font-bold text-white text-center lg:text-right">
+      <Typography variant="h4" className="font-bold text-white text-center md:text-right  lg:text-right">
         اطلاعات کاربری
       </Typography>
 
-      {/* محتوای اصلی - ریسپانسیو */}
-      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-        {/* بخش راست - نمایش اطلاعات */}
-        <div className="w-full lg:w-1/2">
+      {/* محتوای اصلی */}
+      <div className="flex flex-col xl:flex-row gap-6 lg:gap-8">
+        {/* بخش نمایش اطلاعات */}
+        <div className="w-full xl:w-1/2">
           <ProfileInfoDisplay userInfo={userInfo} />
         </div>
 
-        {/* بخش چپ - فرم تغییرات */}
-        <div className="w-full lg:w-1/2">
+        {/* بخش فرم تغییرات */}
+        <div className="w-full xl:w-1/2">
           <ProfileEditForm 
             userInfo={userInfo} 
             onUpdateInfo={handleUpdateInfo}
@@ -183,8 +194,10 @@ const Account: React.FC = () => {
         onClose={handleCloseSnackbar}
         autoHideDuration={4000}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        
       />
     </div>
+    
   );
 };
 

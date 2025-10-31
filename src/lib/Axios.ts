@@ -20,16 +20,13 @@ api.interceptors.request.use(
       }
     }
     
-    console.log('Request config:', {
-      method: config.method,
-      url: config.url,
-      headers: config.headers,
-      data: config.data
-    });
-    
     return config;
   },
   (error) => {
+    // Ignore canceled requests noise
+    if ((error && (error.name === 'CanceledError' || error.code === 'ERR_CANCELED')) || (typeof error?.message === 'string' && error.message === 'canceled')) {
+      return Promise.reject(error);
+    }
     console.error('Request error:', error);
     return Promise.reject(error);
   }
@@ -37,10 +34,13 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
-    console.log('Response:', response);
     return response; // Return full response, not just data
   },
   (error) => {
+    // Swallow logging for canceled requests to avoid console noise on nav/hot-reload
+    if ((error && (error.name === 'CanceledError' || error.code === 'ERR_CANCELED')) || (typeof error?.message === 'string' && error.message === 'canceled')) {
+      return Promise.reject(error);
+    }
     console.error('Response error:', error);
     
     if (error.response?.status === 401) {
@@ -58,6 +58,8 @@ api.interceptors.response.use(
 export const setAuthToken = (token: string) => {
   localStorage.setItem('token', token);
   document.cookie = `token=${token}; path=/; max-age=${60 * 60 * 24 * 30}`;
+  // Dispatch custom event to notify components of auth state change
+  window.dispatchEvent(new Event('authStateChanged'));
 };
 
 // Helper function to remove token
@@ -65,6 +67,8 @@ export const removeAuthToken = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
   document.cookie = 'token=; path=/; max-age=0';
+  // Dispatch custom event to notify components of auth state change
+  window.dispatchEvent(new Event('authStateChanged'));
 };
 
 // Helper function to check authentication

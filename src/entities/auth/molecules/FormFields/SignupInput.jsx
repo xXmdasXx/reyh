@@ -18,6 +18,7 @@ function SignupInput({
   return (
     <div {...props}>
       <TextInput
+        variantType="login"
         id="username"
         label="نام کاربری"
         value={valueUsername}
@@ -30,6 +31,7 @@ function SignupInput({
       />
 
       <TextInput
+        variantType="login"
         id="email"
         label="ایمیل"
         type="email"
@@ -43,6 +45,7 @@ function SignupInput({
       />
 
       <TextInput
+        variantType="login"
         id="password"
         label="رمز عبور"
         type="password"

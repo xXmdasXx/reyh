@@ -13,6 +13,7 @@ function LoginInputs({
   return (
     <div {...props}>
       <UserPassField
+        variantType="login"
         label="نام کاربری"
         id="Username"
         value={valueUsername}
@@ -26,6 +27,7 @@ function LoginInputs({
       />
 
       <UserPassField
+        variantType="login"
         label="رمز عبور"
         id="Password"
         type="password"
